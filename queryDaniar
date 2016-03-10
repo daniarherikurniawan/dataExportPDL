@@ -1,25 +1,6 @@
-﻿SELECT ST_Area(BL.geom)
-FROM bandung_landuse BL
-WHERE gid = 1
-7.55608267131607e-07
+﻿//syntax for exporting
+pgsql2shp -f file_outpot.shp -h localhost -u daniar -P daniar spatial_data " "
 
-SELECT *
-FROM bandung_landuse
-LIMIT 1
-//0.924574705292
-0.924574705292
-
-15.141195841579
-15.141195841579
-SELECT ST_AsText(ST_Transform(geom, 26918)) FROM bandung_jalan
-LIMIT 1; 
-//0.00697568626215
-
-SELECT  
-FROM jabar J ,bandung_infra BI
-WHERE 
-
-SELECT * FROM jabar J, bandung_infra BI  WHERE kabupaten = 'KOTAMADYA BANDUNG' AND kecamatan='KECAMATAN UJUNGBERUNG' AND ST_Intersects(BI.geom, J.geom)
 
 Tampilkan jalan yang menghubungkan antar infrastruktur yang ada di kecamatan Ujungberung!
 // jalan ujung berung
