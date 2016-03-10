@@ -1,0 +1,46 @@
+﻿SELECT ST_Area(BL.geom)
+FROM bandung_landuse BL
+WHERE gid = 1
+7.55608267131607e-07
+
+SELECT *
+FROM bandung_landuse
+LIMIT 1
+//0.924574705292
+0.924574705292
+
+15.141195841579
+15.141195841579
+SELECT ST_AsText(ST_Transform(geom, 26918)) FROM bandung_jalan
+LIMIT 1; 
+//0.00697568626215
+
+SELECT  
+FROM jabar J ,bandung_infra BI
+WHERE 
+
+SELECT * FROM jabar J, bandung_infra BI  WHERE kabupaten = 'KOTAMADYA BANDUNG' AND kecamatan='KECAMATAN UJUNGBERUNG' AND ST_Intersects(BI.geom, J.geom)
+
+Tampilkan jalan yang menghubungkan antar infrastruktur yang ada di kecamatan Ujungberung!
+// jalan ujung berung
+SELECT BJ.* FROM jabar J, bandung_jalan BJ  WHERE J.kabupaten = 'KOTAMADYA BANDUNG' AND J.kecamatan='KECAMATAN UJUNGBERUNG' AND ST_Intersects(BJ.geom, J.geom) 
+// infra ujungberung
+SELECT BI.*  FROM jabar J, bandung_infra BI  WHERE kabupaten = 'KOTAMADYA BANDUNG' AND kecamatan='KECAMATAN UJUNGBERUNG' AND ST_Intersects(BI.geom, J.geom)
+// kecamatan ujung berung
+SELECT kecamatan, ST_Union(geom) FROM jabar WHERE kecamatan='KECAMATAN UJUNGBERUNG' GROUP BY kecamatan
+
+Sebutkan nama jalan yang didekatnya terdapat masjid pada kecamatan Sukasari 
+// kecamatan sukasari
+SELECT  kecamatan, ST_Union(geom) FROM jabar WHERE kecamatan='KECAMATAN SUKASARI' AND kabupaten = 'KOTAMADYA BANDUNG' GROUP BY kecamatan
+// masjid di sukasari
+SELECT BI.*  FROM jabar J, bandung_infra BI  WHERE kabupaten = 'KOTAMADYA BANDUNG' AND kecamatan='KECAMATAN SUKASARI' AND ST_Intersects(BI.geom, J.geom) AND BI.keterangan = 'Masjid'
+// jalan di sekitar masjid di sukasari
+SELECT BJ.keterangan FROM jabar J, bandung_infra BI, bandung_jalan BJ  WHERE J.kabupaten = 'KOTAMADYA BANDUNG' AND 
+J.kecamatan='KECAMATAN SUKASARI' AND ST_Intersects(BI.geom, J.geom) AND BI.keterangan = 'Masjid' AND
+ST_Distance(BI.geom, BJ.geom)<0.001
+
+
+
+SELECT distinct keterangan  FROM bandung_infra
+
+SELECT SUM(panjang) FROM bandung_jalan; 
