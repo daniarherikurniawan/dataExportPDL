@@ -2,6 +2,7 @@
 pgsql2shp -f file_outpot.shp -h localhost -u daniar -P daniar spatial_data " "
 
 
+
 Tampilkan jalan yang menghubungkan antar infrastruktur yang ada di kecamatan Ujungberung!
 // jalan ujung berung
 SELECT BJ.* FROM jabar J, bandung_jalan BJ  WHERE J.kabupaten = 'KOTAMADYA BANDUNG' AND J.kecamatan='KECAMATAN UJUNGBERUNG' AND ST_Intersects(BJ.geom, J.geom) 
@@ -10,18 +11,61 @@ SELECT BI.*  FROM jabar J, bandung_infra BI  WHERE kabupaten = 'KOTAMADYA BANDUN
 // kecamatan ujung berung
 SELECT kecamatan, ST_Union(geom) FROM jabar WHERE kecamatan='KECAMATAN UJUNGBERUNG' GROUP BY kecamatan
 
+
+
+
 Sebutkan nama jalan yang didekatnya terdapat masjid pada kecamatan Sukasari 
 // kecamatan sukasari
 SELECT  kecamatan, ST_Union(geom) FROM jabar WHERE kecamatan='KECAMATAN SUKASARI' AND kabupaten = 'KOTAMADYA BANDUNG' GROUP BY kecamatan
+pgsql2shp -f masjid_kecamatan_sukasari.shp -h localhost -u daniar -P daniar spatial_data "SELECT  kecamatan, ST_Union(geom) FROM jabar WHERE kecamatan='KECAMATAN SUKASARI' AND kabupaten = 'KOTAMADYA BANDUNG' GROUP BY kecamatan"
+
 // masjid di sukasari
 SELECT BI.*  FROM jabar J, bandung_infra BI  WHERE kabupaten = 'KOTAMADYA BANDUNG' AND kecamatan='KECAMATAN SUKASARI' AND ST_Intersects(BI.geom, J.geom) AND BI.keterangan = 'Masjid'
+pgsql2shp -f masjid_posisinya_di_kecamatan_sukasari.shp -h localhost -u daniar -P daniar spatial_data "SELECT BI.*  FROM jabar J, bandung_infra BI  WHERE kabupaten = 'KOTAMADYA BANDUNG' AND kecamatan='KECAMATAN SUKASARI' AND ST_Intersects(BI.geom, J.geom) AND BI.keterangan = 'Masjid'"
+
 // jalan di sekitar masjid di sukasari
-SELECT BJ.keterangan FROM jabar J, bandung_infra BI, bandung_jalan BJ  WHERE J.kabupaten = 'KOTAMADYA BANDUNG' AND 
-J.kecamatan='KECAMATAN SUKASARI' AND ST_Intersects(BI.geom, J.geom) AND BI.keterangan = 'Masjid' AND
-ST_Distance(BI.geom, BJ.geom)<0.001
+SELECT BJ.keterangan, BJ.geom FROM jabar J, bandung_infra BI, bandung_jalan BJ  WHERE J.kabupaten = 'KOTAMADYA BANDUNG' AND J.kecamatan='KECAMATAN SUKASARI' AND ST_Intersects(BI.geom, J.geom) AND BI.keterangan = 'Masjid' AND ST_Distance(BI.geom, BJ.geom)<0.001
+pgsql2shp -f jalan_di_sekitar_masjid.shp -h localhost -u daniar -P daniar spatial_data "SELECT BJ.keterangan, BJ.geom FROM jabar J, bandung_infra BI, bandung_jalan BJ  WHERE J.kabupaten = 'KOTAMADYA BANDUNG' AND J.kecamatan='KECAMATAN SUKASARI' AND ST_Intersects(BI.geom, J.geom) AND BI.keterangan = 'Masjid' AND ST_Distance(BI.geom, BJ.geom)<0.001"
 
 
+
+
+//Tampilkan bangunan yang berada di area perkebunan! 
+SELECT *
+FROM bandung_infra BI, bandung_landuse BL
+WHERE BI.keterangan = 'Bangunan Terpencar'
+AND BL.keterangan = 'Hutan'
+AND ST_Intersects(BL.geom, BI.geom)
+
+
+
+
+//Berapa jumlah masjid yang ada di kecamatan Babakan Ciparay?
+SELECT COUNT(*) 
+FROM bandung_infra BI, jabar J
+WHERE keterangan = 'Masjid' 
+AND J.kecamatan = 'KECAMATAN COBLONG'
+AND ST_Intersects(J.geom, BI.geom)
+
+
+
+
+// Tampilkan jalan yang ada di KEL. TURANGGA , Kota Bandung !
+SELECT BJ.* 
+FROM bandung_jalan BJ, jabar J
+WHERE J.kelurahan = 'KEL. TURANGGA'
+AND J.kabupaten = 'KOTAMADYA BANDUNG'
+AND ST_Intersects(BJ.geom, J.geom)
+
+
+
+
+SELECT distinct keterangan  FROM bandung_landuse
 
 SELECT distinct keterangan  FROM bandung_infra
+
+SELECT distinct * FROM jabar WHERE kabupaten = 'KOTAMADYA BANDUNG' AND kelurahan = 'KEL. TURANGGA'
+
+
 
 SELECT SUM(panjang) FROM bandung_jalan; 
